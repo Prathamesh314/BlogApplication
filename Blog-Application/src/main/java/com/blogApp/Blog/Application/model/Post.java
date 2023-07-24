@@ -21,9 +21,9 @@ public class Post {
     private String image;
     @ManyToOne
     private User user;
+    @ManyToOne
+    private Category category;
     @OneToMany
     private List<Comment> comments;
-    @OneToMany(mappedBy = "posts")
-    private Category category;
 
 }
