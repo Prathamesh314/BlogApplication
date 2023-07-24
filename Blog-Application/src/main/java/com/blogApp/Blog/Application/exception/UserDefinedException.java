@@ -11,7 +11,7 @@ public class UserDefinedException extends RuntimeException{
     Long userid;
 
     public UserDefinedException(String username, String id, Long userid) {
-        super(String.format("%s not found with %s: %l",username,id,userid));
+        super(String.format("%s not found with %s: %s",username,id,userid));
         this.username = username;
         this.id = id;
         this.userid = userid;

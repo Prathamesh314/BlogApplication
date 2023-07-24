@@ -37,6 +37,20 @@ public class UserService {
         return MapToResponse(user);
     }
 
+    public void deleteUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(()->new UserDefinedException("User","ID",id));
+        userRepository.deleteById(id);
+    }
+
+    public void updateUser(UserRequest userRequest,Long id){
+        User user = userRepository.findById(id).orElseThrow(()->new UserDefinedException("User","ID",id));
+        user.setUsername(userRequest.getUsername());
+        user.setEmail(userRequest.getEmail());
+        user.setPassword(userRequest.getPassword());
+        user.setAbout(userRequest.getAbout());
+        userRepository.save(user);
+    }
+
     private UserResponse MapToResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())

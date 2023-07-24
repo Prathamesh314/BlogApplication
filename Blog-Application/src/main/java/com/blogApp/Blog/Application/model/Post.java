@@ -23,5 +23,7 @@ public class Post {
     private User user;
     @OneToMany
     private List<Comment> comments;
+    @OneToMany(mappedBy = "posts")
+    private Category category;
 
 }
