@@ -9,7 +9,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -34,7 +36,7 @@ public class User {
     private String about;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Post> posts;
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    List<Comment> comments;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    Set<Comment> comments = new HashSet<>();
 
 }

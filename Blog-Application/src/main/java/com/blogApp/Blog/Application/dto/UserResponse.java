@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Normalized;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,4 +19,5 @@ public class UserResponse {
     private String email;
     private String password;
     private String about;
+    private Set<CommentResponse> comments = new HashSet<>();
 }
