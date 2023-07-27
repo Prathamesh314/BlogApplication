@@ -102,6 +102,10 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    public List<PostResponse> searchPosts(String keyword){
+        return postRepository.findByTitleContaining(keyword).stream().map(this::MapToResponse).toList();
+    }
+
 
     private PostResponse MapToResponse(Post post) {
         return PostResponse.builder()

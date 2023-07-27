@@ -53,6 +53,12 @@ public class PostController {
         return postService.getPostById(postID);
     }
 
+    @GetMapping("/search/{keywords}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostResponse> searchPosts(@PathVariable String keywords){
+        return postService.searchPosts(keywords);
+    }
+
     @PutMapping("/{postID}")
     @ResponseStatus(HttpStatus.OK)
     public String updatePost(@RequestBody PostRequest postRequest,@PathVariable Long postID){
