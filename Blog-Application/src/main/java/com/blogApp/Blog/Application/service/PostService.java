@@ -9,12 +9,15 @@ import com.blogApp.Blog.Application.repository.CategoryRepository;
 import com.blogApp.Blog.Application.repository.PostRepository;
 import com.blogApp.Blog.Application.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,9 +25,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
 
+    @Value("${project.image}")
+    private String path;
+
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+
+    private final FileService fileService;
 
     public void createPost(PostRequest postRequest,Long user_id,Long cat_id){
         User user = userRepository.findById(user_id).orElseThrow(()->new UserDefinedException("User","ID",user_id));
@@ -104,6 +112,13 @@ public class PostService {
 
     public List<PostResponse> searchPosts(String keyword){
         return postRepository.findByTitleContaining(keyword).stream().map(this::MapToResponse).toList();
+    }
+
+    public void uploadImage(MultipartFile image, Long id) throws IOException {
+        Post post = postRepository.findById(id).orElseThrow(()->new UserDefinedException("Post","ID",id));
+        String name = fileService.uploadImage(path,image);
+        post.setImage(name);
+        postRepository.save(post);
     }
 
 
