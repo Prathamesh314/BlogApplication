@@ -12,6 +12,9 @@ import com.blogApp.Blog.Application.repository.CategoryRepository;
 import com.blogApp.Blog.Application.repository.PostRepository;
 import com.blogApp.Blog.Application.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,20 +41,25 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<PostResponse> getAllPosts(){
-        return postRepository.findAll().stream().map(this::MapToResponse).toList();
+    public List<PostResponse> getAllPosts(Integer pageNumber,Integer pageSize){
+
+        Pageable p = PageRequest.of(pageNumber,pageSize);
+        Page<Post> posts = postRepository.findAll(p);
+        List<Post> allposts = posts.getContent();
+
+        return allposts.stream().map(this::MapToResponse).toList();
     }
 
     public List<PostResponse> getPostsByUsers(Long userID){
         User user = userRepository.findById(userID).orElseThrow(()->new UserDefinedException("User","ID",userID));
-        List<Post> posts = postRepository.findByUser(user).orElseThrow(()->new UserDefinedException("User","ID",userID));
+        List<Post> posts = postRepository.findByUser(user);
         return posts.stream().map(this::MapToResponse).toList();
 
     }
 
     public List<PostResponse> getPostByCategory(Long catID){
         Category category = categoryRepository.findById(catID).orElseThrow(()->new UserDefinedException("category","ID",catID));
-        List<Post> posts = postRepository.findByCategory(category).orElseThrow(()->new RuntimeException);
+        List<Post> posts = postRepository.findByCategory(category);
         return posts.stream().map(this::MapToResponse).toList();
     }
 

@@ -6,11 +6,10 @@ import com.blogApp.Blog.Application.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
-    Optional<Post> findByUser(User user);
-    Optional<Post> findByCategory(Category category);
+    List<Post> findByUser(User user);
+    List<Post> findByCategory(Category category);
 }

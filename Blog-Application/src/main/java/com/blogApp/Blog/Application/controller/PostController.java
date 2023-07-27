@@ -25,8 +25,23 @@ public class PostController {
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    public List<PostResponse> getAllPosts(){
-        return postService.getAllPosts();
+    public List<PostResponse> getAllPosts(
+            @RequestParam(value = "pageSize",defaultValue = "3",required = false) Integer pageSize,
+            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber
+    ){
+        return postService.getAllPosts(pageNumber,pageSize);
+    }
+
+    @GetMapping("/user/{userID}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostResponse> getPostsByUser(@PathVariable Long userID){
+        return postService.getPostsByUsers(userID);
+    }
+
+    @GetMapping("/category/{categoryID}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostResponse> getPostByCategory(@PathVariable Long categoryID){
+        return postService.getPostByCategory(categoryID);
     }
 
     @GetMapping("/{postID}")
