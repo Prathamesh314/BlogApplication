@@ -1,5 +1,6 @@
 package com.blogApp.Blog.Application.controller;
 
+import com.blogApp.Blog.Application.dto.PaginationResponse;
 import com.blogApp.Blog.Application.dto.PostRequest;
 import com.blogApp.Blog.Application.dto.PostResponse;
 import com.blogApp.Blog.Application.service.PostService;
@@ -25,11 +26,13 @@ public class PostController {
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    public List<PostResponse> getAllPosts(
+    public PaginationResponse getAllPosts(
             @RequestParam(value = "pageSize",defaultValue = "3",required = false) Integer pageSize,
-            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber
+            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber,
+            @RequestParam(value = "sortBy",defaultValue = "id",required = false) String sortBy,
+            @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir
     ){
-        return postService.getAllPosts(pageNumber,pageSize);
+        return postService.getAllPosts(pageNumber,pageSize,sortBy,sortDir);
     }
 
     @GetMapping("/user/{userID}")

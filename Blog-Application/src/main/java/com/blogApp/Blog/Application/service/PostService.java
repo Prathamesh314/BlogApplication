@@ -1,9 +1,6 @@
 package com.blogApp.Blog.Application.service;
 
-import com.blogApp.Blog.Application.dto.CategoryResponse;
-import com.blogApp.Blog.Application.dto.PostRequest;
-import com.blogApp.Blog.Application.dto.PostResponse;
-import com.blogApp.Blog.Application.dto.UserResponse;
+import com.blogApp.Blog.Application.dto.*;
 import com.blogApp.Blog.Application.exception.UserDefinedException;
 import com.blogApp.Blog.Application.model.Category;
 import com.blogApp.Blog.Application.model.Post;
@@ -15,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,13 +39,36 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<PostResponse> getAllPosts(Integer pageNumber,Integer pageSize){
+    public PaginationResponse getAllPosts(Integer pageNumber, Integer pageSize,String sortBy,String sortDir){
 
-        Pageable p = PageRequest.of(pageNumber,pageSize);
+        Sort sort = null;
+
+        if (sortDir.equalsIgnoreCase("asc")){
+            sort = Sort.by(sortBy).ascending();
+        }
+        else{
+            sort = Sort.by(sortBy).descending();
+        }
+
+        Pageable p = PageRequest.of(pageNumber,pageSize, sort);;
         Page<Post> posts = postRepository.findAll(p);
         List<Post> allposts = posts.getContent();
 
-        return allposts.stream().map(this::MapToResponse).toList();
+
+
+        List<PostResponse> postResponses =  allposts.stream().map(this::MapToResponse).toList();
+
+        PaginationResponse paginationResponse = PaginationResponse.builder()
+                .posts(postResponses)
+                .pageNumber(posts.getNumber())
+                .pageSize(posts.getSize())
+                .totalElements(posts.getTotalElements())
+                .totalPages(posts.getTotalPages())
+                .lastPage(posts.isLast())
+                .build();
+
+        return paginationResponse;
+
     }
 
     public List<PostResponse> getPostsByUsers(Long userID){
