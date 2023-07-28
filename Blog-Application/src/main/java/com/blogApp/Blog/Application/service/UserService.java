@@ -10,6 +10,7 @@ import com.blogApp.Blog.Application.repository.CommentRepository;
 import com.blogApp.Blog.Application.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,12 +23,14 @@ public class UserService {
 
     private final CommentRepository commentRepository;
 
+    private final PasswordEncoder encoder;
+
     public void createUser(UserRequest userRequest)
     {
         User user = User.builder()
                 .username(userRequest.getUsername())
                 .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
+                .password(encoder.encode(userRequest.getPassword()))
                 .about(userRequest.getAbout())
                 .build();
         userRepository.save(user);

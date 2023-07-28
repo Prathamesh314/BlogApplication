@@ -15,22 +15,22 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 public class AppConfig {
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        UserDetails user1 = User.builder()
-                .username("Prathamesh")
-                .password(encoder().encode("12345678"))
-                .roles("ADMIN")
-                .build();
-
-        UserDetails user2 = User.builder()
-                .username("Ram")
-                .password(encoder().encode("87654321"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user1, user2);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService(){
+//        UserDetails user1 = User.builder()
+//                .username("Prathamesh")
+//                .password(encoder().encode("12345678"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        UserDetails user2 = User.builder()
+//                .username("Ram")
+//                .password(encoder().encode("87654321"))
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user1, user2);
+//    }
 
     @Bean
     public PasswordEncoder encoder(){
