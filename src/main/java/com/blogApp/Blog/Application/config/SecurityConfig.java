@@ -3,11 +3,11 @@ package com.blogApp.Blog.Application.config;
 import com.blogApp.Blog.Application.security.JwtAuthenticationEntryPoint;
 import com.blogApp.Blog.Application.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.filters.CorsFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,11 +15,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableWebMvc
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+
 
     private final JwtAuthenticationEntryPoint point;
 
@@ -33,8 +38,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth->auth.requestMatchers("/auth/**").permitAll()
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests()
+                .requestMatchers(
+                        "/auth/**",
+                        "/v2/api-docs",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/swagger/ui",
+                        "/webjars/**",
+                        "/swagger-ui.html"
+                ).permitAll()
+                .anyRequest().authenticated().and()
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
@@ -48,5 +63,6 @@ public class SecurityConfig {
         daoAuthenticationProvider.setPasswordEncoder(encoder);
         return daoAuthenticationProvider;
     }
+
 
 }
