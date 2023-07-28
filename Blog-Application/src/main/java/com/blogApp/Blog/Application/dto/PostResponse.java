@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -20,5 +22,5 @@ public class PostResponse {
     private String image;
     private UserResponse user;
     private CategoryResponse category;
-    private Set<Comment> comments = new HashSet<>();
+    private List<CommentResponse> comments = new ArrayList<>();
 }

@@ -3,9 +3,11 @@ package com.blogApp.Blog.Application.service;
 import com.blogApp.Blog.Application.dto.*;
 import com.blogApp.Blog.Application.exception.UserDefinedException;
 import com.blogApp.Blog.Application.model.Category;
+import com.blogApp.Blog.Application.model.Comment;
 import com.blogApp.Blog.Application.model.Post;
 import com.blogApp.Blog.Application.model.User;
 import com.blogApp.Blog.Application.repository.CategoryRepository;
+import com.blogApp.Blog.Application.repository.CommentRepository;
 import com.blogApp.Blog.Application.repository.PostRepository;
 import com.blogApp.Blog.Application.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+
+    private final CommentRepository commentRepository;
 
     private final FileService fileService;
 
@@ -123,6 +127,8 @@ public class PostService {
 
 
     private PostResponse MapToResponse(Post post) {
+        List<Comment> comments = commentRepository.findByPostId(post.getId());
+        List<CommentResponse> commentResponses = comments.stream().map(this::MapToCommentResponse).toList();
         return PostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -130,6 +136,14 @@ public class PostService {
                 .content(post.getContent())
                 .user(MapToUserResponse(post.getUser()))
                 .category(MapToCategoryResponse(post.getCategory()))
+                .comments(commentResponses)
+                .build();
+    }
+
+    private CommentResponse MapToCommentResponse(Comment comment) {
+        return CommentResponse.builder()
+                .id(comment.getId())
+                .comment(comment.getComment())
                 .build();
     }
 

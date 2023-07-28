@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Normalized;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -19,5 +21,5 @@ public class UserResponse {
     private String email;
     private String password;
     private String about;
-    private Set<CommentResponse> comments = new HashSet<>();
+    private List<CommentResponse> comments = new ArrayList<>();
 }

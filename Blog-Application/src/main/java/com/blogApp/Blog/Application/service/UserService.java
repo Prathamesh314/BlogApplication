@@ -1,9 +1,12 @@
 package com.blogApp.Blog.Application.service;
 
+import com.blogApp.Blog.Application.dto.CommentResponse;
 import com.blogApp.Blog.Application.dto.UserRequest;
 import com.blogApp.Blog.Application.dto.UserResponse;
 import com.blogApp.Blog.Application.exception.UserDefinedException;
+import com.blogApp.Blog.Application.model.Comment;
 import com.blogApp.Blog.Application.model.User;
+import com.blogApp.Blog.Application.repository.CommentRepository;
 import com.blogApp.Blog.Application.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -16,6 +19,8 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final CommentRepository commentRepository;
 
     public void createUser(UserRequest userRequest)
     {
@@ -52,12 +57,22 @@ public class UserService {
     }
 
     private UserResponse MapToResponse(User user) {
+        List<Comment> comments = commentRepository.findByUserId(user.getId());
+        List<CommentResponse> commentResponses = comments.stream().map(this::MapToCommentResponse).toList();
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .about(user.getAbout())
+                .comments(commentResponses)
+                .build();
+    }
+
+    private CommentResponse MapToCommentResponse(Comment comment) {
+        return CommentResponse.builder()
+                .id(comment.getId())
+                .comment(comment.getComment())
                 .build();
     }
 
