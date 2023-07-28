@@ -26,10 +26,11 @@ public class CommentController {
         return "Comment Created Successfully";
     }
 
-    @GetMapping("/comment")
+    @DeleteMapping("/comment/{commentID}")
     @ResponseStatus(HttpStatus.OK)
-    public List<CommentResponse> getAllComments(){
-        return commentService.getAllComments();
+    public String deleteComment(@PathVariable Long commentID){
+        commentService.deleteComment(commentID);
+        return "Comment deleted successfully";
     }
 
 }

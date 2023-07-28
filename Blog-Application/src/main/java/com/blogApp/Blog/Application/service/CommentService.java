@@ -27,54 +27,16 @@ public class CommentService {
     public void createComment(CommentRequest commentRequest,Long userId,Long postId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserDefinedException("User","ID",userId));
         Post post = postRepository.findById(postId).orElseThrow(()->new UserDefinedException("Post","ID",postId));
-        Comment comment = Comment.builder()
-                .comment(commentRequest.getComment())
-                .user(user)
-                .post(post)
-                .build();
+        Comment comment = new Comment();
+        comment.setComment(commentRequest.getComment());
+        comment.setPost(post);
+        comment.setUser(user);
         commentRepository.save(comment);
     }
 
-    public List<CommentResponse> getAllComments(){
-        return commentRepository.findAll().stream().map(this::MapToResponse).toList();
-    }
-
-    private CommentResponse MapToResponse(Comment comment) {
-        return CommentResponse.builder()
-                .id(comment.getId())
-                .comment(comment.getComment())
-                .user(MapToUserResponse(comment.getUser()))
-                .post(MapToPostResponse(comment.getPost()))
-                .build();
-    }
-
-    private PostResponse MapToPostResponse(Post post) {
-        return PostResponse.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .image(post.getImage())
-                .content(post.getContent())
-                .user(MapToUserResponse(post.getUser()))
-                .category(MapToCategoryResponse(post.getCategory()))
-                .build();
-    }
-
-    private CategoryResponse MapToCategoryResponse(Category category) {
-        return CategoryResponse.builder()
-                .id(category.getId())
-                .title(category.getTitle())
-                .description(category.getDescription())
-                .build();
-    }
-
-    private UserResponse MapToUserResponse(User user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .about(user.getAbout())
-                .build();
+    public void deleteComment(Long id){
+        Comment comment = commentRepository.findById(id).orElseThrow(()->new UserDefinedException("Comment","ID",id));
+        commentRepository.delete(comment);
     }
 
 }
