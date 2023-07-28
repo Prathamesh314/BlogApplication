@@ -37,7 +37,7 @@ public class SecurityConfig {
             "/swagger/ui",
             "/webjars/**",
             "/swagger-ui.html"
-    }
+    };
     private final JwtAuthenticationEntryPoint point;
 
     private final JwtAuthenticationFilter filter;
@@ -50,7 +50,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth->auth.requestMatchers(URLS).permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(auth->auth.requestMatchers(URLS).permitAll().requestMatchers("/api/**").authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
