@@ -21,5 +21,4 @@ public class UserResponse {
     private String email;
     private String password;
     private String about;
-    private List<CommentResponse> comments = new ArrayList<>();
 }

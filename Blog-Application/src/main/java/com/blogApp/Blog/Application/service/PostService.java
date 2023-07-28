@@ -141,9 +141,12 @@ public class PostService {
     }
 
     private CommentResponse MapToCommentResponse(Comment comment) {
+        User user = comment.getUser();
+        UserResponse userResponse = MapToUserResponse(user);
         return CommentResponse.builder()
                 .id(comment.getId())
                 .comment(comment.getComment())
+                .user(userResponse)
                 .build();
     }
 

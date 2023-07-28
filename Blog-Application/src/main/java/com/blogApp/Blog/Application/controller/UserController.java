@@ -40,7 +40,6 @@ public class UserController {
     }
 
     // delete
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String deleteUser(@PathVariable Long id){

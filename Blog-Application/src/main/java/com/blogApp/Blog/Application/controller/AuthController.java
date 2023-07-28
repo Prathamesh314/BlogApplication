@@ -3,6 +3,7 @@ package com.blogApp.Blog.Application.controller;
 import com.blogApp.Blog.Application.dto.JwtRequest;
 import com.blogApp.Blog.Application.dto.JwtResponse;
 import com.blogApp.Blog.Application.dto.UserRequest;
+import com.blogApp.Blog.Application.exception.ApiException;
 import com.blogApp.Blog.Application.security.JwtHelper;
 import com.blogApp.Blog.Application.service.UserService;
 import jakarta.validation.Valid;
@@ -66,7 +67,7 @@ public class AuthController {
 
 
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password  !!");
+            throw new ApiException(" Invalid Username or Password  !!");
         }
 
     }

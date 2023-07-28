@@ -60,15 +60,12 @@ public class UserService {
     }
 
     private UserResponse MapToResponse(User user) {
-        List<Comment> comments = commentRepository.findByUserId(user.getId());
-        List<CommentResponse> commentResponses = comments.stream().map(this::MapToCommentResponse).toList();
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .about(user.getAbout())
-                .comments(commentResponses)
                 .build();
     }
 
